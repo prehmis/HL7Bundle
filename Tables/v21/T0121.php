@@ -1,0 +1,31 @@
+<?php
+    
+namespace Prehmis\HL7Bundle\Tables\v21;
+
+use Elao\Enum\ChoiceEnumTrait;
+use Elao\Enum\ReadableEnum;
+
+/**
+ * Description of T0121
+ * Response Flag
+ * HL7 version 2.1
+ *
+ */
+final class T0121 extends ReadableEnum
+{
+    use ChoiceEnumTrait;
+
+    const E = 'E';
+    const F = 'F';
+    const N = 'N';
+            
+    public static function choices(): array
+    {
+        return [
+            self::E => 'Report exceptions only.',
+            self::F => 'Same as D, plus confirmations explicitly.',
+            self::N => 'Only the MSA segment is returned.',
+            ];
+    }
+      
+}
