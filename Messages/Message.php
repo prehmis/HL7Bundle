@@ -32,7 +32,7 @@ class Message
      * Array holding all segments of this message.
      */
     protected $segments;
-
+    
     /**
      * local value for segment separator
      */
@@ -171,7 +171,7 @@ class Message
             $this->addSegment($segment);
         }
     }
-
+    
     /**
      * Append a segment to the end of the message
      *
@@ -481,8 +481,8 @@ class Message
     public function resetSegmentIndices(): void
     {
         $reflector = new \ReflectionClass($this);
-        $segments = glob(dirname($reflector->getFileName()).'/Segments/*.php');
-
+        $segments = glob(dirname($reflector->getFileName()).'/../Segments/*.php');
+        
         // Go through each available segment class and reset its ID
         foreach ($segments as $file) { // ['OBR', 'PID', 'OBX', 'IN1'...]
             $className = "Prehmis\\HL7Bundle\\Segments\\".pathinfo($file, PATHINFO_FILENAME);

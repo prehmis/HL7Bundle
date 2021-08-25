@@ -76,7 +76,7 @@ class HL7Service
         $this->options[self::AUTO_INCREMENT_INDICES] = true;
         $this->options[self::KEEP_EMPTY_SUB_FIELDS] = false;
         $this->options[self::DO_NOT_SPLIT_REPETITION] = false;
-        $this->options[self::RESET_INDICES] = false;
+        $this->options[self::RESET_INDICES] = true;
     }
 
     /**
