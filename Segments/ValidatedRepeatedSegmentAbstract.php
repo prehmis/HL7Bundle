@@ -2,7 +2,7 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\HL7;
+use Prehmis\HL7Bundle\HL7Service;
 
 /**
  * Description of ValidatedRepeatedSegmentAbstract
@@ -21,7 +21,7 @@ abstract class ValidatedRepeatedSegmentAbstract extends ValidatedSegmentAbstract
     {
         parent::__construct($fields, $options);
         
-        if (isset($options[HL7::AUTO_INCREMENT_INDICES]) && $options[HL7::AUTO_INCREMENT_INDICES]) {
+        if (isset($options[HL7Service::AUTO_INCREMENT_INDICES]) && $options[HL7Service::AUTO_INCREMENT_INDICES]) {
             $this->setField(static::ID, $this::$setId++);
         }
     }

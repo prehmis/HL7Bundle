@@ -3,17 +3,16 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0276;
-use Prehmis\HL7Bundle\Tables\T0277;
-use Prehmis\HL7Bundle\Tables\T0278;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * SCH segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-siu-message
  * http://hl7-definition.caristix.com:9010/HL7%20v2.3.1/segment/SCH
  */
-class SCH extends ValidatedSegmentAbstract
+class SCH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
     const SEGMENT_NAME = 'SCH';
     
@@ -46,15 +45,13 @@ class SCH extends ValidatedSegmentAbstract
     const FILLER_ORDER_NUMBER = 27;
     
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::APPOINTMENT_REASON => T0276::class,
-            self::APPOINTMENT_TYPE => T0277::class,
-            self::FILLER_STATUS_CODE => T0278::class];
+        $this->defaultValidationClasses = [self::APPOINTMENT_REASON => [GenericTable::class, 'T0276'],
+            self::APPOINTMENT_TYPE => [GenericTable::class, 'T0277'],
+            self::FILLER_STATUS_CODE => [GenericTable::class, 'T0278']];
     }
     
     /**

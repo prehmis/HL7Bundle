@@ -3,6 +3,7 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
@@ -10,7 +11,7 @@ use Prehmis\HL7Bundle\Tables\v28\T0104;
  *
  * @author MBERTELER
  */
-class ERR extends ValidatedSegmentAbstract
+class ERR extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'ERR';
@@ -28,16 +29,6 @@ class ERR extends ValidatedSegmentAbstract
     const OVERRIDE_TYPE = 10;
     const OVERRIDE_REASON_CODE = 11;
     const HELP_DESK_CONSTACT_PERSON = 12;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version

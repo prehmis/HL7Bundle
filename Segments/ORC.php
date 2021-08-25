@@ -3,18 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0038;
-use Prehmis\HL7Bundle\Tables\T0119;
-use Prehmis\HL7Bundle\Tables\T0121;
-use Prehmis\HL7Bundle\Tables\T0482;
-use Prehmis\HL7Bundle\Tables\T0483;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * ORC segment class
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7%20v2.5.1&segment=ORC
  */
-class ORC extends ValidatedSegmentAbstract
+class ORC extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'ORC';
@@ -61,17 +58,16 @@ class ORC extends ValidatedSegmentAbstract
     const ORDER_WORKFLOW_PROFILE = 34;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::ORDER_CONTROL => T0119::class,
-            self::ORDER_STATUS => T0038::class,
-            self::RESPONSE_FLAG => T0121::class,
-            self::ORDER_TYPE => T0482::class,
-            self::ENTERER_AUTHORIZATION_MODE => T0483::class];
+        $this->defaultValidationClasses = [self::ORDER_CONTROL => [GenericTable::class, 'T0119'],
+            self::ORDER_STATUS => [GenericTable::class, 'T0038'],
+            self::RESPONSE_FLAG => [GenericTable::class, 'T0121'],
+            self::ORDER_TYPE => [GenericTable::class, 'T0482'],
+            self::ENTERER_AUTHORIZATION_MODE => [GenericTable::class, 'T0483'],
+        ];
     }
 
     /**

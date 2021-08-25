@@ -3,18 +3,16 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0001;
-use Prehmis\HL7Bundle\Tables\T0002;
-use Prehmis\HL7Bundle\Tables\T0005;
-use Prehmis\HL7Bundle\Tables\T0136;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 
 /**
  * PID segment class
  * Reference: https://corepointhealth.com/resource-center/hl7-resources/hl7-pid-segment
  */
-class PID extends ValidatedRepeatedSegmentAbstract
+class PID extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
     const SEGMENT_NAME = 'PID';
     
@@ -65,15 +63,17 @@ class PID extends ValidatedRepeatedSegmentAbstract
     // hl7 2.7
     const PATIENT_TELECOMMUNICATION_INFORMATION = 40;
     
-    public function getDefaultValidationClasses() {
-        return [
-            self::SEX => T0001::class,
-            self::RACE => T0005::class,
-            self::MARITAL_STATUS => T0002::class,
-            self::MULTIPLE_BIRTH_INDICATOR => T0136::class,
-            self::PATIENT_DEATH_INDICATOR => T0136::class,
-            self::IDENTITY_UNKNOWN_INDICATOR => T0136::class,
-            
+    /**
+     * Set the default validation classes used by this segment
+     */
+    public function setDefaultValidationClasses() {
+        $this->defaultValidationClasses = [
+            self::SEX => [GenericTable::class, 'T0001'],
+            self::RACE => [GenericTable::class, 'T0005'],
+            self::MARITAL_STATUS => [GenericTable::class, 'T0002'],
+            self::MULTIPLE_BIRTH_INDICATOR => [GenericTable::class, 'T0136'],
+            self::PATIENT_DEATH_INDICATOR => [GenericTable::class, 'T0136'],
+            self::IDENTITY_UNKNOWN_INDICATOR => [GenericTable::class, 'T0136'],
         ];
     }
 

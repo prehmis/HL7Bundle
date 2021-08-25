@@ -3,14 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0136;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * IN3 segment class
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5.1&segment=ORC
  */
-class IN3 extends ValidatedRepeatedSegmentAbstract
+class IN3 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'IN3';
@@ -43,13 +44,11 @@ class IN3 extends ValidatedRepeatedSegmentAbstract
     const CERTIFICATION_CATEGORY = 27;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::CERTIFICATION_REQUIRED => T0136::class];
+        $this->defaultValidationClasses = [self::CERTIFICATION_REQUIRED => [GenericTable::class, 'T0136']];
     }
 
     /**

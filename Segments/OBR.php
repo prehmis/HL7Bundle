@@ -3,16 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0065;
-use Prehmis\HL7Bundle\Tables\T0123;
-use Prehmis\HL7Bundle\Tables\T0124;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * OBR segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-obr-segment
  */
-class OBR extends ValidatedRepeatedSegmentAbstract
+class OBR extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'OBR';
@@ -80,16 +79,14 @@ class OBR extends ValidatedRepeatedSegmentAbstract
     const PARENT_ORDER = 54;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::SPECIMEN_ACTION_CODE => T0065::class,
-            self::DIAGNOSTIC_SERV_SECT_ID => T0074::class,
-            self::RESULT_STATUS => T0123::class,
-            self::TRANSPORTATION_MODE => T0124::class,
+        $this->defaultValidationClasses = [self::SPECIMEN_ACTION_CODE => [GenericTable::class, 'T0065'],
+            self::DIAGNOSTIC_SERV_SECT_ID => [GenericTable::class, 'T0074'],
+            self::RESULT_STATUS => [GenericTable::class, 'T0123'],
+            self::TRANSPORTATION_MODE => [GenericTable::class, 'T0124'],
             ];
     }
 

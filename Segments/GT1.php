@@ -3,6 +3,7 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
@@ -10,7 +11,7 @@ use Prehmis\HL7Bundle\Tables\v28\T0104;
  *
  * @author MBERTELER
  */
-class GT1 extends ValidatedRepeatedSegmentAbstract
+class GT1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'GT1';
@@ -75,16 +76,6 @@ class GT1 extends ValidatedRepeatedSegmentAbstract
     // HL7 v2.5
     const GUARANTOR_BIRTH_PLACE = 56;
     const VIP_INDICATOR = 57;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
     
     /**
      * Return the maximum amount of fields allowed by the hl7 version

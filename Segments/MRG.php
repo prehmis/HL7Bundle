@@ -3,13 +3,14 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * MRG segment class
  * Ref: http://hl7-definition.caristix.com:9010/HL7%20v2.3.1/segment/MRG
  */
-class MRG extends ValidatedSegmentAbstract
+class MRG extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'MRG';
@@ -23,16 +24,6 @@ class MRG extends ValidatedSegmentAbstract
     const PRIOR_VISIT_NUMBER = 5;
     const PRIOR_ALTERNATE_VISIT_ID = 6;
     const PRIOR_PATIENT_NAME = 7;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version

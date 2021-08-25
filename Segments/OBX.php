@@ -3,16 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0125;
-use Prehmis\HL7Bundle\Tables\T0085;
-use Prehmis\HL7Bundle\Tables\T0163;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * OBX segment class
  * Ref: https://hl7-definition.caristix.com/v2/HL7v2.5.1/Segments/OBX 
  */
-class OBX extends ValidatedRepeatedSegmentAbstract
+class OBX extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'OBX';
@@ -54,15 +53,14 @@ class OBX extends ValidatedRepeatedSegmentAbstract
     const LOCAL_PROCESS_CONTROL = 28;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::VALUE_TYPE => T0125::class,
-            self::OBSERVE_RESULT_STATUS => T0085::class,
-                self::OBSERVATION_SITE => T0163::class];
+        $this->defaultValidationClasses = [self::VALUE_TYPE => [GenericTable::class, 'T0125'],
+            self::OBSERVE_RESULT_STATUS => [GenericTable::class, 'T0085'],
+            self::OBSERVATION_SITE => [GenericTable::class, 'T0163'],
+        ];
     }
 
     /**

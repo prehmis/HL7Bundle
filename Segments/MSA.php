@@ -3,15 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0008;
-use Prehmis\HL7Bundle\Tables\T0357;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * MSA: Message acknowledgement segment
  * Ref: http://hl7-definition.caristix.com:9010/HL7%20v2.3/segment/MSA
  */
-class MSA extends ValidatedSegmentAbstract
+class MSA extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'MSA';
@@ -28,14 +28,12 @@ class MSA extends ValidatedSegmentAbstract
     const MESSAGE_WAITING_PRIORITY = 8;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::ACKNOWLEDGEMENT_CODE => T0008::class,
-            self::ERROR_CONDITION => T0357::class];
+        $this->defaultValidationClasses = [self::ACKNOWLEDGEMENT_CODE => [GenericTable::class, 'T0008'],
+            self::ERROR_CONDITION => [GenericTable::class, 'T0357']];
     }
 
     /**

@@ -2,12 +2,12 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segment;
-use Prehmis\HL7Bundle\HL7;
+use Prehmis\HL7Bundle\Segments\Segment;
+use Prehmis\HL7Bundle\HL7Service;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0155;
-use Prehmis\HL7Bundle\Tables\T0211;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * MSH (message header) segment class
@@ -28,10 +28,10 @@ use Prehmis\HL7Bundle\Tables\T0211;
  *
  * Reference: https://corepointhealth.com/resource-center/hl7-resources/hl7-msh-message-header
  */
-class MSH extends ValidatedSegmentAbstract
+class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+
     const SEGMENT_NAME = 'MSH';
-    
     // 2.1
     const FIELD_SEPARATOR = 1;
     const ENCODING_CHARACTERS = 2;
@@ -63,7 +63,7 @@ class MSH extends ValidatedSegmentAbstract
     const RECEIVING_RESPONSIBLE_ORGANIZATION = 23;
     const SENDING_NETWORK_ADDRESS = 24;
     const RECEIVING_NETWORK_ADDRESS = 25;
-    
+
     /**
      * Create an instance of the MSH segment.
      *
@@ -78,10 +78,10 @@ class MSH extends ValidatedSegmentAbstract
      */
     public function __construct(array $fields = null, array $options = [])
     {
-         // Ensure the hl7 version of the message is used to validate instead of that of the $options
+        // Ensure the hl7 version of the message is used to validate instead of that of the $options
         if (is_array($fields)) {
-            if(isset($fields[self::VERSION_ID - 1])) {
-                $options[HL7::HL7_VERSION] = $fields[self::VERSION_ID - 1];
+            if (isset($fields[self::VERSION_ID - 1])) {
+                $options[HL7Service::HL7_VERSION] = $fields[self::VERSION_ID - 1];
             }
         }
         parent::__construct($fields, $options);
@@ -89,39 +89,39 @@ class MSH extends ValidatedSegmentAbstract
         if (isset($fields)) { // We're done if MSH fields were provided
             return;
         }
-        $this->setField(self::VERSION_ID, $options[HL7::HL7_VERSION] ?? '2.5');
-        $this->setField(self::FIELD_SEPARATOR, $options[HL7::FIELD_SEPARATOR] ?? '|');
-        
-        if(isset($options[HL7::COMPONENT_SEPARATOR]) && 
-                isset($options[HL7::REPETITION_SEPARATOR]) && 
-                isset($options[HL7::ESCAPE_CHARACTER]) && 
-                isset($options[HL7::SUBCOMPONENT_SEPARATOR])) {
+        $this->setField(self::VERSION_ID, $options[HL7Service::HL7_VERSION] ?? T0104::RELEASE_2_5);
+        $this->setField(self::FIELD_SEPARATOR, $options[HL7Service::FIELD_SEPARATOR] ?? '|');
+
+        if (isset($options[HL7Service::COMPONENT_SEPARATOR]) &&
+                isset($options[HL7Service::REPETITION_SEPARATOR]) &&
+                isset($options[HL7Service::ESCAPE_CHARACTER]) &&
+                isset($options[HL7Service::SUBCOMPONENT_SEPARATOR])) {
             $this->setField(self::ENCODING_CHARACTERS,
-                $options[HL7::COMPONENT_SEPARATOR] .
-                $options[HL7::REPETITION_SEPARATOR] .
-                $options[HL7::ESCAPE_CHARACTER] .
-                $options[HL7::SUBCOMPONENT_SEPARATOR]
+                    $options[HL7Service::COMPONENT_SEPARATOR].
+                    $options[HL7Service::REPETITION_SEPARATOR].
+                    $options[HL7Service::ESCAPE_CHARACTER].
+                    $options[HL7Service::SUBCOMPONENT_SEPARATOR]
             );
         } else {
             $this->setField(self::ENCODING_CHARACTERS, '^~\\&');
         }
 
         $this->setField(self::DATETIME_OF_MESSAGE, strftime('%Y%m%d%H%M%S'));
-        $this->setField(self::MESSAGE_CONTROL_ID, $this->getDateTimeOfMessage() . random_int(10000, 99999));
+        $this->setField(self::MESSAGE_CONTROL_ID, $this->getField(self::DATETIME_OF_MESSAGE).random_int(10000, 99999));
     }
-    
+
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::ACCEPT_ACKNOWLEDGEMENT_TYPE => T0155::class,
-            self::APPLICATION_ACKNOWLEDGEMENT_TYPE => T0155::class,
-            self::CHARACTER_SET => T0211::class];
+        $this->defaultValidationClasses = [
+            self::ACCEPT_ACKNOWLEDGEMENT_TYPE => [GenericTable::class, 'T0155'],
+            self::APPLICATION_ACKNOWLEDGEMENT_TYPE => [GenericTable::class, 'T0155'],
+            self::CHARACTER_SET => [GenericTable::class, 'T0211']
+        ];
     }
-    
+
     /**
      * Return the maximum amount of fields allowed by the hl7 version
      * 
@@ -129,22 +129,22 @@ class MSH extends ValidatedSegmentAbstract
      */
     public function getMaximumFields(): int
     {
-        switch($this->hl7Version) {
+        switch ($this->hl7Version) {
             case T0104::RELEASE_2_1:
                 return self::CONTINUATION_POINTER;
             case T0104::RELEASE_2_2:
                 return self::COUNTRY_CODE;
             case T0104::RELEASE_2_3:
                 return self::PRINCIPAL_LANGUAGE;
-            case T0104::RELEASE_2_3_1: 
+            case T0104::RELEASE_2_3_1:
                 return self::ALTERNATIVE_CHAR_SET;
             case T0104::RELEASE_2_4:
             case T0104::RELEASE_2_5:
             case T0104::RELEASE_2_5_1:
                 return self::MESSAGE_PROFILE_ID;
-            case T0104::RELEASE_2_6:    
+            case T0104::RELEASE_2_6:
             case T0104::RELEASE_2_7:
-            case T0104::RELEASE_2_7_1: 
+            case T0104::RELEASE_2_7_1:
             case T0104::RELEASE_2_8:
             default:
                 return self::RECEIVING_NETWORK_ADDRESS;
@@ -161,7 +161,7 @@ class MSH extends ValidatedSegmentAbstract
      *
      * @param int $index Index of field
      * @param string $value
-     * @return Prehmis\HL7Bundle\Segment
+     * @return Prehmis\HL7Bundle\Segments\Segment
      * @throws \InvalidArgumentException
      */
     public function setField(int $index, $value = ''): Segment
@@ -178,7 +178,7 @@ class MSH extends ValidatedSegmentAbstract
     }
 
     // -------------------- Setter Methods ------------------------------
-    
+
     /**
      * 
      * @param type $value
@@ -189,7 +189,7 @@ class MSH extends ValidatedSegmentAbstract
     {
         return $this->setField(self::FIELD_SEPARATOR, $value);
     }
-    
+
     /**
      * 
      * @param type $value
@@ -219,17 +219,17 @@ class MSH extends ValidatedSegmentAbstract
      * If it was empty then the new value will be just ORM.
      *
      * @param string $value
-     * @param int $position
      * @return Prehmis\HL7Bundle\Segments\MSH
      * @throws \InvalidArgumentException
      */
-    public function setMessageType($value, int $position = self::MESSAGE_TYPE): MSH
+    public function setMessageType($value): MSH
     {
-        $typeField = $this->getField($position);
-        if (is_array($typeField) && !empty($typeField[1])) {
-            $value = [$value, $typeField[1]];
+        $typeField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($typeField)) {
+            $typeField[0] = $value;
+            return $this->setField(self::MESSAGE_TYPE, $typeField);
         }
-        return $this->setField($position, $value);
+        return $this->setField(self::MESSAGE_TYPE, $value);
     }
 
     /**
@@ -254,26 +254,36 @@ class MSH extends ValidatedSegmentAbstract
      * @return Prehmis\HL7Bundle\Segments\MSH
      * @throws \InvalidArgumentException
      */
-    public function setTriggerEvent($value, int $position = self::MESSAGE_TYPE): MSH
+    public function setTriggerEvent($value): MSH
     {
-        $typeField = $this->getField($position);
-        if (is_array($typeField) && !empty($typeField[0])) {
-            $value = [$typeField[0], $value];
-        } else {
-            $value = [$typeField, $value];
+        $typeField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($typeField)) {
+            $typeField[1] = $value;
+            return $this->setField(self::MESSAGE_TYPE, $typeField);
         }
-        return $this->setField($position, $value);
+
+        return $this->setField(self::MESSAGE_TYPE, [$typeField, $value]);
+    }
+
+    public function setMessageStructure($value): MSH
+    {
+        $typeField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($typeField)) {
+            $typeField[2] = $value;
+            return $this->setField(self::MESSAGE_TYPE, $typeField);
+        }
+        
+        return $this->setField(self::MESSAGE_TYPE, ['','',$value]);
     }
 
     /**
      * ORM / ORU etc.
-     * @param int $position
      * @return string
      */
-    public function getMessageType(int $position = self::MESSAGE_TYPE) : string
+    public function getMessageType(): string
     {
-        $typeField = $this->getField($position);
-        if (!empty($typeField) && is_array($typeField)) {
+        $typeField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($typeField) && !empty($typeField)) {
             return (string) $typeField[0];
         }
         return (string) $typeField;
@@ -281,16 +291,24 @@ class MSH extends ValidatedSegmentAbstract
 
     /**
      * 
-     * @param int $position Index of field
      * @return null|string|array The value of the field
      */
-    public function getTriggerEvent(int $position = self::MESSAGE_TYPE)
+    public function getTriggerEvent()
     {
-        $triggerField = $this->getField($position);
-        if (!empty($triggerField[1]) && is_array($triggerField)) {
+        $triggerField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($triggerField) && !empty($triggerField[1])) {
             return $triggerField[1];
         }
         return null;
     }
-    
+
+    public function getMessageStructure(): string
+    {
+        $triggerField = $this->getField(self::MESSAGE_TYPE);
+        if (is_array($triggerField) && !empty($triggerField[2])) {
+            return $triggerField[2];
+        }
+        return null;
+    }
+
 }

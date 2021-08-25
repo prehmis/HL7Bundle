@@ -3,16 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0004;
-use Prehmis\HL7Bundle\Tables\T0007;
-use Prehmis\HL7Bundle\Tables\T0009;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * PV1 segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-pv1-patient-visit-information-segment
  */
-class PV1 extends ValidatedRepeatedSegmentAbstract
+class PV1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'PV1';
@@ -76,15 +75,13 @@ class PV1 extends ValidatedRepeatedSegmentAbstract
     const SERVICE_EPISODE_IDENTIFIER = 54;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::PATIENT_CLASS => T0004::class,
-            self::ADMISSION_TYPE => T0007::class,
-            self::AMBULATORY_STATUS => T0009::class,
+        $this->defaultValidationClasses = [self::PATIENT_CLASS => [GenericTable::class, 'T0004'],
+            self::ADMISSION_TYPE => [GenericTable::class, 'T0007'],
+            self::AMBULATORY_STATUS => [GenericTable::class, 'T0009'],
         ];
     }
 

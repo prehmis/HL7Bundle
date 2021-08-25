@@ -29,22 +29,31 @@ interface ValidatedSegmentInterface extends SegmentInterface
     public function getDefaultValidationClasses(): array;
     
     /**
+     * Return an array of custom validation classes for fields
+     * 
+     * @return array
+     */
+    public function getCustomValidationClasses(): array;
+    
+    /**
      * Return the class name of the validation class to use for a field
      * 
      * @param int $index
-     * @return string|null
+     * @return string|array|null
      */    
-    public function getValidationClass(int $index): ?string;
+    public function getValidationClass(int $index);
     
     /**
      * Set the validation class for a specific field
      * 
      * Set $fqn to '' to disable validation of a particular field
+     * Set $fqn to Fully Qualified Classname or an array of FQN as 1st element and an argument as second.
+     * eg [GenericClass::class, 'T001']
      * 
      * @param int $index
-     * @param string $fqn
+     * @param string|array $fqn
      */
-    public function setValidationClass(int $index, string $fqn);
+    public function setValidationClass(int $index, $fqn);
     
     /**
      * Validate each field and return the errors

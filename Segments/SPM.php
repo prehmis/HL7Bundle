@@ -3,26 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0136;
-use Prehmis\HL7Bundle\Tables\T0369;
-use Prehmis\HL7Bundle\Tables\T0371;
-use Prehmis\HL7Bundle\Tables\T0376;
-use Prehmis\HL7Bundle\Tables\T0487;
-use Prehmis\HL7Bundle\Tables\T0488;
-use Prehmis\HL7Bundle\Tables\T0489;
-use Prehmis\HL7Bundle\Tables\T0490;
-use Prehmis\HL7Bundle\Tables\T0491;
-use Prehmis\HL7Bundle\Tables\T0492;
-use Prehmis\HL7Bundle\Tables\T0493;
-use Prehmis\HL7Bundle\Tables\T0494;
-
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * SPM segment class
  * Ref: https://hl7-definition.caristix.com/v2/HL7v2.5/Segments/SPM
  */
-class SPM extends ValidatedRepeatedSegmentAbstract
+class SPM extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'SPM';
@@ -60,24 +49,23 @@ class SPM extends ValidatedRepeatedSegmentAbstract
     const SHIPMENT_ID = 32;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::SPECIMEN_CHILD_ROLE => T0494::class,
-            self::SPECIMEN_CONDITION => T0493::class,
-            self::SPECIMEN_APPROPRIATENESS => T0492::class,
-            self::SPECIMEN_QUALITY => T0491::class,
-            self::SPECIMEN_REJECT_REASON => T0490::class,
-            self::SPECIMEN_AVAILABILITY => T0136::class,
-            self::SPECIMEN_RISK_CODE => T0489::class,
-            self::SPECIMEN_HANDLING_CODE => T0376::class,
-            self::SPECIMEN_ROLE => T0369::class,
-            self::SPECIMEN_COLLECTION_METHOD => T0488::class,
-            self::SPECIMEN_ADDITIVES => T0371::class,
-            self::SPECIMEN_TYPE => T0487::class];
+        $this->defaultValidationClasses = [self::SPECIMEN_CHILD_ROLE => [GenericTable::class, 'T0494'],
+            self::SPECIMEN_CONDITION => [GenericTable::class, 'T0493'],
+            self::SPECIMEN_APPROPRIATENESS => [GenericTable::class, 'T0492'],
+            self::SPECIMEN_QUALITY => [GenericTable::class, 'T0491'],
+            self::SPECIMEN_REJECT_REASON => [GenericTable::class, 'T0490'],
+            self::SPECIMEN_AVAILABILITY => [GenericTable::class, 'T0136'],
+            self::SPECIMEN_RISK_CODE => [GenericTable::class, 'T0489'],
+            self::SPECIMEN_HANDLING_CODE => [GenericTable::class, 'T0376'],
+            self::SPECIMEN_ROLE => [GenericTable::class, 'T0369'],
+            self::SPECIMEN_COLLECTION_METHOD => [GenericTable::class, 'T0488'],
+            self::SPECIMEN_ADDITIVES => [GenericTable::class, 'T0371'],
+            self::SPECIMEN_TYPE => [GenericTable::class, 'T0487'],
+        ];
     }
 
     /**

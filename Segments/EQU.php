@@ -3,13 +3,14 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * EQU segment class
  * Ref: https://www.interfaceware.com/hl7-standard/hl7-segment-EQU.html
  */
-class EQU extends ValidatedRepeatedSegmentAbstract
+class EQU extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'EQU';
@@ -19,16 +20,6 @@ class EQU extends ValidatedRepeatedSegmentAbstract
     const EQUIPMENT_STATE = 3;
     const LOCAL_REMOTE_CONTROL_STATE = 4;
     const ALERT_LEVEL = 5;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version

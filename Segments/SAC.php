@@ -3,14 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0370;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * SAC segment class
  * Ref: https://www.interfaceware.com/hl7-standard/hl7-segment-SAC.html
  */
-class SAC extends ValidatedRepeatedSegmentAbstract
+class SAC extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'SAC';
@@ -60,13 +61,11 @@ class SAC extends ValidatedRepeatedSegmentAbstract
     const OTHER_ENVIRONMENTAL_FACTORS = 44;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::CONTAINER_STATUS => T0370::class];
+        $this->defaultValidationClasses = [self::CONTAINER_STATUS => [GenericTable::class, 'T0370']];
     }
 
     /**

@@ -20,7 +20,6 @@
     "prefer-stable" : true,
     "require": {
         "php": ">=7.3",
-        "ext-sockets": "*",
         "ext-mbstring": "*",
         "elao/enum": "~1.13"
     },

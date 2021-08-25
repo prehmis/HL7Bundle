@@ -3,8 +3,9 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0206;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * AIP segment class
@@ -19,7 +20,7 @@ use Prehmis\HL7Bundle\Tables\T0206;
 
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5.1&segment=AIP
  */
-class AIP extends ValidatedRepeatedSegmentAbstract
+class AIP extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'AIP';
@@ -38,13 +39,11 @@ class AIP extends ValidatedRepeatedSegmentAbstract
     const FILLER_STATUS_CODE = 12;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::SEGMENT_ACTION_CODE => T0206::class];
+        $this->defaultValidationClasses = [self::SEGMENT_ACTION_CODE => [GenericTable::class, 'T0206']];
     }
 
     /**

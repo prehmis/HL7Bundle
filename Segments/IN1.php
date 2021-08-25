@@ -3,16 +3,15 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0001;
-use Prehmis\HL7Bundle\Tables\T0063;
-use Prehmis\HL7Bundle\Tables\T0136;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * IN1 segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-in1-insurance-segment
  */
-class IN1 extends ValidatedRepeatedSegmentAbstract
+class IN1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'IN1';
@@ -79,18 +78,15 @@ class IN1 extends ValidatedRepeatedSegmentAbstract
     const INSURANCE_ACTION_CODE = 55;
 
     /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
+     * Set the default validation classes used by this segment
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses()
     {
-        return [self::INSURED_RELATIONSHIP_TO_PATIENT => T0063::class,
-            self::NOTICE_OF_ADMISSION_FLAG => T0136::class,
-            self::REPORT_OF_ELIGIBILITY_FLAG => T0136::class,
-            self::INSURED_ADMINISTRATIVE_SEX => T0001::class,
-            
-            ];
+        $this->defaultValidationClasses = [self::INSURED_RELATIONSHIP_TO_PATIENT => [GenericTable::class, 'T0063'],
+            self::NOTICE_OF_ADMISSION_FLAG => [GenericTable::class, 'T0136'],
+            self::REPORT_OF_ELIGIBILITY_FLAG => [GenericTable::class, 'T0136'],
+            self::INSURED_ADMINISTRATIVE_SEX => [GenericTable::class, 'T0001'],
+        ];
     }
 
     /**
@@ -116,7 +112,7 @@ class IN1 extends ValidatedRepeatedSegmentAbstract
             case T0104::RELEASE_2_7:
             case T0104::RELEASE_2_7_1:
                 return self::EXTERNAL_HEALTH_PLAN_IDENTIFIERS;
-            case T0104::RELEASE_2_8:    
+            case T0104::RELEASE_2_8:
             default:
                 return self::INSURANCE_ACTION_CODE;
         }

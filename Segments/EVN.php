@@ -3,6 +3,7 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
@@ -10,7 +11,7 @@ use Prehmis\HL7Bundle\Tables\v28\T0104;
  * Ref: http://hl7-definition.caristix.com:9010/HL7%20v2.3.1/segment/EVN
  *      https://corepointhealth.com/resource-center/hl7-resources/hl7-evn-event-type-segment
  */
-class EVN extends ValidatedSegmentAbstract
+class EVN extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'EVN';
@@ -25,16 +26,6 @@ class EVN extends ValidatedSegmentAbstract
     const EVENT_OCCURRED = 6;
     // 2.4
     const EVENT_FACILITY = 7;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version

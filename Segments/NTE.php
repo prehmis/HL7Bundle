@@ -3,13 +3,14 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * NTE segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-nte-notes-comments
  */
-class NTE extends ValidatedRepeatedSegmentAbstract
+class NTE extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'NTE';
@@ -23,16 +24,6 @@ class NTE extends ValidatedRepeatedSegmentAbstract
     const ENTERED_DATETIME = 6;
     const EFFECTIVE_START_DATE = 7;
     const EXPIRATION_DATE = 8;
-
-    /**
-     * Return the default validation classes used by this segment
-     * 
-     * @return array
-     */
-    public function getDefaultValidationClasses(): array
-    {
-        return [];
-    }
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version

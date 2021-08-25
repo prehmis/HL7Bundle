@@ -1,0 +1,8 @@
+parameters:
+
+services:
+    
+    Prehmis\HL7Bundle\HL7Service:
+        class: Prehmis\HL7Bundle\HL7Service
+        public: true
+        autowire: true 

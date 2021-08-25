@@ -3,9 +3,9 @@
 namespace Prehmis\HL7Bundle\Segments;
 
 use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
-use Prehmis\HL7Bundle\Tables\T0206;
-use Prehmis\HL7Bundle\Tables\T0305;
+use Prehmis\HL7Bundle\Tables\GenericTable;
 
 /**
  * AIL segment class
@@ -20,7 +20,7 @@ use Prehmis\HL7Bundle\Tables\T0305;
 
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5.1&segment=AIL
  */
-class AIL extends ValidatedRepeatedSegmentAbstract
+class AIL extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
     const SEGMENT_NAME = 'AIL';
@@ -43,10 +43,10 @@ class AIL extends ValidatedRepeatedSegmentAbstract
      * 
      * @return array
      */
-    public function getDefaultValidationClasses(): array
+    public function setDefaultValidationClasses(): array
     {
-        return [self::SEGMENT_ACTION_CODE => T0206::class,
-            self::LOCATION_TYPE => T0305::class];
+        return [self::SEGMENT_ACTION_CODE => [GenericTable::class, 'T0206'],
+            self::LOCATION_TYPE => [GenericTable::class, 'T0305']];
     }
 
     /**

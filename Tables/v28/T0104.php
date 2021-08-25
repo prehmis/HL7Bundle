@@ -11,7 +11,7 @@ use Elao\Enum\ReadableEnum;
  * HL7 version 2.8
  *
  */
-class T0104 extends ReadableEnum
+final class T0104 extends ReadableEnum
 {
     use ChoiceEnumTrait;
 
