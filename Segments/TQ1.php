@@ -2,16 +2,19 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * TQ1 segment class
  * Ref: http://hl7-definition.caristix.com:9010/HL7%20v2.5.1/dataType/Default.aspx?version=HL7+v2.5.1&dataType=TQ1
  */
-class TQ1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class TQ1 extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+
+    use RepeatedSegmentTrait;
 
     const SEGMENT_NAME = 'TQ1';
     // v2.5
@@ -49,7 +52,7 @@ class TQ1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentIn
             case T0104::RELEASE_2_6:
             case T0104::RELEASE_2_7:
             case T0104::RELEASE_2_7_1:
-            case T0104::RELEASE_2_8:    
+            case T0104::RELEASE_2_8:
             default:
                 return self::TOTAL_OCCURRENCES;
         }

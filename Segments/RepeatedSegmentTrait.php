@@ -5,12 +5,11 @@ namespace Prehmis\HL7Bundle\Segments;
 use Prehmis\HL7Bundle\HL7Service;
 
 /**
- * Description of ValidatedRepeatedSegmentAbstract
  *
  * @author MBERTELER
  */
-abstract class ValidatedRepeatedSegmentAbstract extends ValidatedSegmentAbstract
-{    
+trait RepeatedSegmentTrait
+{
     /**
      * Index of this segment. Incremented for every new segment of this class created
      * @var int
@@ -39,5 +38,4 @@ abstract class ValidatedRepeatedSegmentAbstract extends ValidatedSegmentAbstract
     {
         self::$setId = $index;
     }
-    
 }

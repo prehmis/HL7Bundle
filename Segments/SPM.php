@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 
@@ -11,8 +12,10 @@ use Prehmis\HL7Bundle\Tables\GenericTable;
  * SPM segment class
  * Ref: https://hl7-definition.caristix.com/v2/HL7v2.5/Segments/SPM
  */
-class SPM extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class SPM extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+
+    use RepeatedSegmentTrait;
 
     const SEGMENT_NAME = 'SPM';
     const ID = 1;

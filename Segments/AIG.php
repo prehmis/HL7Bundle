@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 
@@ -19,9 +20,11 @@ use Prehmis\HL7Bundle\Tables\GenericTable;
 
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.3.1&segment=AIG
  */
-class AIG extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class AIG extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
+    use RepeatedSegmentTrait;
+    
     const SEGMENT_NAME = 'AIG';
     // 2.3
     const ID = 1;

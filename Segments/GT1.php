@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
@@ -11,8 +12,10 @@ use Prehmis\HL7Bundle\Tables\v28\T0104;
  *
  * @author MBERTELER
  */
-class GT1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class GT1 extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+    
+    use RepeatedSegmentTrait;
 
     const SEGMENT_NAME = 'GT1';
     // v2.1

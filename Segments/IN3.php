@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 
@@ -11,8 +12,10 @@ use Prehmis\HL7Bundle\Tables\GenericTable;
  * IN3 segment class
  * Ref: http://hl7-definition.caristix.com:9010/Default.aspx?version=HL7+v2.5.1&segment=ORC
  */
-class IN3 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class IN3 extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+    
+    use RepeatedSegmentTrait;
 
     const SEGMENT_NAME = 'IN3';
     const ID = 1;

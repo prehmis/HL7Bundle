@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 
@@ -11,8 +12,10 @@ use Prehmis\HL7Bundle\Tables\GenericTable;
  * SAC segment class
  * Ref: https://www.interfaceware.com/hl7-standard/hl7-segment-SAC.html
  */
-class SAC extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class SAC extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+
+    use RepeatedSegmentTrait;
 
     const SEGMENT_NAME = 'SAC';
     const ID = 1;

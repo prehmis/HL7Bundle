@@ -2,8 +2,9 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 
@@ -12,8 +13,11 @@ use Prehmis\HL7Bundle\Tables\GenericTable;
  * PID segment class
  * Reference: https://corepointhealth.com/resource-center/hl7-resources/hl7-pid-segment
  */
-class PID extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class PID extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
+    
+    use RepeatedSegmentTrait;
+    
     const SEGMENT_NAME = 'PID';
     
     // hl7 v2.1

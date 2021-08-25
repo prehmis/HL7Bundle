@@ -2,17 +2,20 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * NTE segment class
  * Ref: https://corepointhealth.com/resource-center/hl7-resources/hl7-nte-notes-comments
  */
-class NTE extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class NTE extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
+    use RepeatedSegmentTrait;
+    
     const SEGMENT_NAME = 'NTE';
     const ID = 1;
     const SOURCE_OF_COMMENT = 2;

@@ -2,17 +2,20 @@
 
 namespace Prehmis\HL7Bundle\Segments;
 
-use Prehmis\HL7Bundle\Segments\ValidatedRepeatedSegmentAbstract;
+use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
+use Prehmis\HL7Bundle\Segments\RepeatedSegmentTrait;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 /**
  * DG1 segment class
  * Ref: http://hl7-definition.caristix.com:9010/HL7%20v2.3.1/segment/DG1
  */
-class DG1 extends ValidatedRepeatedSegmentAbstract implements ValidatedSegmentInterface
+class DG1 extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 {
 
+    use RepeatedSegmentTrait;
+    
     const SEGMENT_NAME = 'DG1';
     // v2.1
     const ID = 1;
