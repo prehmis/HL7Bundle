@@ -35,7 +35,7 @@ class HL7Service
     const DO_NOT_SPLIT_REPETITION = 'DO_NOT_SPLIT_REPETITION';
     const RESET_INDICES = 'RESET_INDICES';
     const VALIDATE_FIELDS = 'VALIDATE_FIELDS';
-    CONST CUSTOM_VALIDATION_CLASSES = 'CUSTOM_VALIDATION_CLASSES';
+    const CUSTOM_VALIDATION_CLASSES = 'CUSTOM_VALIDATION_CLASSES';
 
     /**
      * Holds all global HL7 settings.
@@ -218,13 +218,13 @@ class HL7Service
         $stringOptions = [self::NULL_VALUE,
             self::HL7_VERSION,
             self::SEGMENT_SEPARATOR];
-        if (in_array($name, [$stringOptions])) {
+        if (in_array($name, $stringOptions)) {
             $this->options[$name] = (string) $value;
             return true;
         }
         
         $arrayOptions = [self::CUSTOM_VALIDATION_CLASSES];
-        if (in_array($name, [$arrayOptions]) && is_array($value)) {
+        if (in_array($name, $arrayOptions) && is_array($value)) {
             $this->options[$name] = $value;
             return true;
         }
