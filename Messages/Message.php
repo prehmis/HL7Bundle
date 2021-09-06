@@ -189,6 +189,15 @@ class Message
 
         return true;
     }
+    
+    public function addSegments(array $arrayOfSegments): bool
+    {
+        foreach($arrayOfSegments as $segment) {
+            $this->addSegment($segment);
+        }
+        
+        return true;
+    }
 
     /**
      * Insert a segment.
