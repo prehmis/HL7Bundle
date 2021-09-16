@@ -40,7 +40,7 @@ class AcknowledgeMessage extends Message
         if(null == $msh) {
             $msh = new MSH(null, $options);
         }
-        $msh->setField(MSH::MESSAGE_TYPE, $type);
+        $msh->setMessageType($type);
         $msh->setMessageStructure($structure);
         
         $msa = new MSA(null, $options);
@@ -55,13 +55,13 @@ class AcknowledgeMessage extends Message
         }
 
         if(isset($originalMsh)) {
-//            $msh->setField(MSH::SENDING_APPLICATION, $originalMsh->getReceivingApplication());
-//            $msh->setField(MSH::SENDING_FACILITY, $originalMsh->getReceivingFacility());
-            $msh->setField(MSH::RECEIVING_APPLICATION, $originalMsh->getSendingApplication());
-            $msh->setField(MSH::RECEIVING_FACILITY, $originalMsh->getSendingFacility());
+//            $msh->setField(MSH::SENDING_APPLICATION, $originalMsh->getField(MSH::RECEIVING_APPLICATION));
+//            $msh->setField(MSH::SENDING_FACILITY, $originalMsh->getField(MSH::RECEIVING_FACILITY));
+            $msh->setField(MSH::RECEIVING_APPLICATION, $originalMsh->getField(MSH::SENDING_APPLICATION));
+            $msh->setField(MSH::RECEIVING_FACILITY, $originalMsh->getField(MSH::SENDING_FACILITY));
             $msh->setTriggerEvent($originalMsh->getTriggerEvent());
 
-            $msa->setField(MSA::MESSAGE_CONTROL_ID, $originalMsh->getMessageControlId());
+            $msa->setField(MSA::MESSAGE_CONTROL_ID, $originalMsh->getField(MSH::MESSAGE_CONTROL_ID));
         }
         
         $this->addSegment($msh);

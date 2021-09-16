@@ -8,6 +8,7 @@ use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
 use Prehmis\HL7Bundle\Tables\GenericTable;
+use Ramsey\Uuid\Uuid;
 
 /**
  * MSH (message header) segment class
@@ -107,7 +108,8 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
         }
 
         $this->setField(self::DATETIME_OF_MESSAGE, strftime('%Y%m%d%H%M%S'));
-        $this->setField(self::MESSAGE_CONTROL_ID, $this->getField(self::DATETIME_OF_MESSAGE).random_int(10000, 99999));
+        $uuid = Uuid::uuid6();
+        $this->setField(self::MESSAGE_CONTROL_ID, $uuid->getHex());
     }
 
     /**
@@ -273,7 +275,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
             return $this->setField(self::MESSAGE_TYPE, $typeField);
         }
         
-        return $this->setField(self::MESSAGE_TYPE, ['','',$value]);
+        return $this->setField(self::MESSAGE_TYPE, [$typeField,'',$value]);
     }
 
     /**
@@ -291,15 +293,15 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 
     /**
      * 
-     * @return null|string|array The value of the field
+     * @return string
      */
-    public function getTriggerEvent()
+    public function getTriggerEvent(): string
     {
         $triggerField = $this->getField(self::MESSAGE_TYPE);
         if (is_array($triggerField) && !empty($triggerField[1])) {
             return $triggerField[1];
         }
-        return null;
+        return '';
     }
 
     public function getMessageStructure(): string
@@ -308,7 +310,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
         if (is_array($triggerField) && !empty($triggerField[2])) {
             return $triggerField[2];
         }
-        return null;
+        return '';
     }
 
 }

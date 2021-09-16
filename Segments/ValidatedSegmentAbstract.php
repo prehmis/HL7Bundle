@@ -101,6 +101,9 @@ abstract class ValidatedSegmentAbstract extends Segment
 //        if($index > $this->maximumFields()) {
 //                return 'Field '.$index.' is not part of version '.$this->hl7Version;
 //        }
+        if(empty($value)) {
+            return null;
+        }
         
         $validationClass = $this->getValidationClass($index);
         

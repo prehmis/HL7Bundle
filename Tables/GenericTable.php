@@ -30,7 +30,7 @@ class GenericTable implements FieldValidatorInterface
                 
                 if(in_array(EnumInterface::class, class_implements($fqn))) {
                     if(false == $fqn::accepts($value)) {
-                        return 'Value ['.$value.'] is not valid';
+                        return 'Value ['.$value.'] is not part of '.$tableName;
                     }
                     return null;
                 } else {
