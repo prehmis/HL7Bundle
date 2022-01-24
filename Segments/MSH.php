@@ -7,6 +7,7 @@ use Prehmis\HL7Bundle\HL7Service;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentAbstract;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
+use Prehmis\HL7Bundle\Tables\v28\T0103;
 use Prehmis\HL7Bundle\Tables\GenericTable;
 use Ramsey\Uuid\Uuid;
 
@@ -48,7 +49,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
     const VERSION_ID = 12;
     const SEQUENCE_NUMBER = 13;
     const CONTINUATION_POINTER = 14;
-    // 2.2 
+    // 2.2
     const ACCEPT_ACKNOWLEDGEMENT_TYPE = 15;
     const APPLICATION_ACKNOWLEDGEMENT_TYPE = 16;
     const COUNTRY_CODE = 17;
@@ -92,6 +93,8 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
         }
         $this->setField(self::VERSION_ID, $options[HL7Service::HL7_VERSION] ?? T0104::RELEASE_2_5);
         $this->setField(self::FIELD_SEPARATOR, $options[HL7Service::FIELD_SEPARATOR] ?? '|');
+        $this->setField(self::PROCESSING_ID, $options[HL7Service::PROCESSING_ID] ?? T0103::DEBUGGING);
+        $this->setField(self::SENDING_APPLICATION, $options[HL7Service::SENDING_APPLICATION] ?? '');
 
         if (isset($options[HL7Service::COMPONENT_SEPARATOR]) &&
                 isset($options[HL7Service::REPETITION_SEPARATOR]) &&
@@ -126,7 +129,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
 
     /**
      * Return the maximum amount of fields allowed by the hl7 version
-     * 
+     *
      * @return int
      */
     public function getMaximumFields(): int
@@ -182,7 +185,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
     // -------------------- Setter Methods ------------------------------
 
     /**
-     * 
+     *
      * @param type $value
      * @return Prehmis\HL7Bundle\Segments\MSH
      * @throws \InvalidArgumentException
@@ -193,7 +196,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
     }
 
     /**
-     * 
+     *
      * @param type $value
      * @return Prehmis\HL7Bundle\Segments\MSH
      * @throws \InvalidArgumentException
@@ -274,7 +277,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
             $typeField[2] = $value;
             return $this->setField(self::MESSAGE_TYPE, $typeField);
         }
-        
+
         return $this->setField(self::MESSAGE_TYPE, [$typeField,'',$value]);
     }
 
@@ -292,7 +295,7 @@ class MSH extends ValidatedSegmentAbstract implements ValidatedSegmentInterface
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getTriggerEvent(): string

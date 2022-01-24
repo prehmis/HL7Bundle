@@ -5,8 +5,8 @@ namespace Prehmis\HL7Bundle\Messages;
 use Prehmis\HL7Bundle\Messages\Message;
 use Prehmis\HL7Bundle\Segments\MSA;
 use Prehmis\HL7Bundle\Segments\MSH;
-use Prehmis\HL7Bundle\Tables\v28\T0076;
 use Prehmis\HL7Bundle\Tables\v28\T0008;
+use Prehmis\HL7Bundle\Tables\v28\T0104;
 
 class AcknowledgeMessage extends Message
 {
@@ -15,13 +15,14 @@ class AcknowledgeMessage extends Message
     /**
      * Usage:
      * ```php
-     * $ack = new AcknowledgeMessage($type, $structure, Message $requestMessage);
+     * $ack = new AcknowledgeMessage($type, $triggerEvent, $structure, Message $requestMessage);
      * ```
      *
      * Convenience module implementing any acknowledgement message. This can be used in HL7 servers to create an
      * acknowledgement for an incoming message.
      *
      * @param string $type Table 76
+     * @param string|null $triggerEvent Table 3
      * @param string $structure Table 354
      * @param Message|null $req
      * @param MSH|null $msh
@@ -29,20 +30,20 @@ class AcknowledgeMessage extends Message
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $type, string $structure, Message $req = null, MSH $msh = null, array $options = [])
+    public function __construct(string $type, ?string $triggerEvent, string $structure, Message $req = null, MSH $msh = null, array $options = [])
     {
         parent::__construct(null, $options);
 
         if ($req) {
             $originalMsh = $req->getMsh() ?? null;
         }
-        
+
         if(null == $msh) {
             $msh = new MSH(null, $options);
         }
         $msh->setMessageType($type);
         $msh->setMessageStructure($structure);
-        
+
         $msa = new MSA(null, $options);
         // Determine acknowledge mode: normal or enhanced
         if (isset($originalMsh) && ($originalMsh->getField(MSH::ACCEPT_ACKNOWLEDGEMENT_TYPE) || $originalMsh->getField(MSH::APPLICATION_ACKNOWLEDGEMENT_TYPE))) {
@@ -59,11 +60,15 @@ class AcknowledgeMessage extends Message
 //            $msh->setField(MSH::SENDING_FACILITY, $originalMsh->getField(MSH::RECEIVING_FACILITY));
             $msh->setField(MSH::RECEIVING_APPLICATION, $originalMsh->getField(MSH::SENDING_APPLICATION));
             $msh->setField(MSH::RECEIVING_FACILITY, $originalMsh->getField(MSH::SENDING_FACILITY));
-            $msh->setTriggerEvent($originalMsh->getTriggerEvent());
-
             $msa->setField(MSA::MESSAGE_CONTROL_ID, $originalMsh->getField(MSH::MESSAGE_CONTROL_ID));
         }
-        
+
+        if ($triggerEvent) {
+            $msh->setTriggerEvent($triggerEvent);
+        } elseif ($originalMsh) {
+            $msh->setTriggerEvent($originalMsh->getTriggerEvent());
+        }
+
         $this->addSegment($msh);
         $this->addSegment($msa);
     }
@@ -94,12 +99,37 @@ class AcknowledgeMessage extends Message
             $code = "$mode$code";
         }
 
-        $msa = $this->getSegmentByIndex(1);
+        $msa = $this->getFirstSegmentByName(MSA::SEGMENT_NAME);
         if (!empty($msa)) {
             $msa->setField(MSA::ACKNOWLEDGEMENT_CODE, $code);
+            if ($msg) {
+                $msa->setField(MSA::TEXT_MESSAGE, $msg);
+            }
         }
-        if ($msg) {
-            $msa->setField(MSA::TEXT_MESSAGE, $msg);
+
+        return $this;
+    }
+
+    /**
+     * Set error condition code on MSA.6 if HL7 version is 2.2 or above
+     *
+     * @param string $code
+     * @return ACK
+     */
+    public function setErrorCondition(string $code): ACK
+    {
+        // do not set field below v2.2
+        $msh = $this->getMsh();
+        if($msh && ($msh->getField(MSH::VERSION_ID) == T0104::RELEASE_2_0
+                || $msh->getField(MSH::VERSION_ID) == T0104::DEMO_2_0
+                ||  $msh->getField(MSH::VERSION_ID) == T0104::RELEASE_2_1)) {
+
+        return $this;
+                }
+
+        $msa = $this->getFirstSegmentByName(MSA::SEGMENT_NAME);
+        if (!empty($msa)) {
+            $msa->setField(MSA::ERROR_CONDITION, $code);
         }
 
         return $this;
@@ -113,10 +143,14 @@ class AcknowledgeMessage extends Message
      * @param string $msg Error message
      * @access public
      */
-    public function setErrorMessage(string $msg): ACK
+    public function setErrorMessage(string $msg, string $errorConditionCode = null): ACK
     {
         $this->setAckCode('E', $msg);
-        
+
+        if($errorConditionCode) {
+            $this->setErrorCondition($errorConditionCode);
+        }
+
         return $this;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace Prehmis\HL7Bundle\Tables\v231;
 
 use Elao\Enum\ChoiceEnumTrait;
@@ -15,20 +15,20 @@ final class T0357 extends ReadableEnum
 {
     use ChoiceEnumTrait;
 
-    const MESSAGE_ACCEPTED = '0';
-    const SEGMENT_SEQUENCE_ERROR = '100';
-    const REQUIRED_FIELD_MISSING = '101';
-    const DATA_TYPE_ERROR = '102';
-    const TABLE_VALUE_NOT_FOUND = '103';
-    const UNSUPPORTED_MESSAGE_TYPE = '200';
-    const UNSUPPORTED_EVENT_CODE = '201';
-    const UNSUPPORTED_PROCESSING_ID = '202';
-    const UNSUPPORTED_VERSION_ID = '203';
-    const UNKNOWN_KEY_IDENTIFIER = '204';
-    const DUPLICATE_KEY_IDENTIFIER = '205';
-    const APPLICATION_RECORD_LOCKED = '206';
-    const APPLICATION_INTERNAL_ERROR = '207';
-            
+    const MESSAGE_ACCEPTED = 0;
+    const SEGMENT_SEQUENCE_ERROR = 100;
+    const REQUIRED_FIELD_MISSING = 101;
+    const DATA_TYPE_ERROR = 102;
+    const TABLE_VALUE_NOT_FOUND = 103;
+    const UNSUPPORTED_MESSAGE_TYPE = 200;
+    const UNSUPPORTED_EVENT_CODE = 201;
+    const UNSUPPORTED_PROCESSING_ID = 202;
+    const UNSUPPORTED_VERSION_ID = 203;
+    const UNKNOWN_KEY_IDENTIFIER = 204;
+    const DUPLICATE_KEY_IDENTIFIER = 205;
+    const APPLICATION_RECORD_LOCKED = 206;
+    const APPLICATION_INTERNAL_ERROR = 207;
+
     public static function choices(): array
     {
         return [
@@ -47,5 +47,5 @@ final class T0357 extends ReadableEnum
             self::APPLICATION_INTERNAL_ERROR => 'Application internal error',
             ];
     }
-      
+
 }

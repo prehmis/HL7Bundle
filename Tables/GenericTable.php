@@ -14,7 +14,7 @@ use Elao\Enum\EnumInterface;
 class GenericTable implements FieldValidatorInterface
 {
     /**
-     * 
+     *
      * @param mixed $value
      * @param string $hl7Version
      * @param string $tableName
@@ -23,13 +23,13 @@ class GenericTable implements FieldValidatorInterface
     public static function isInvalid($value, $hl7Version, $tableName): ?string
     {
         if(T0104::accepts($hl7Version)) {
-            
+
             $fqn = 'Prehmis\\HL7Bundle\\Tables\\v'.str_replace('.', '', $hl7Version).'\\'.$tableName;
-            
+
             if(class_exists($fqn)) {
-                
+
                 if(in_array(EnumInterface::class, class_implements($fqn))) {
-                    if(false == $fqn::accepts($value)) {
+                    if(false == \in_array($value, $fqn::values())) {
                         return 'Value ['.$value.'] is not part of '.$tableName;
                     }
                     return null;
@@ -42,7 +42,7 @@ class GenericTable implements FieldValidatorInterface
                 return 'Validation class '.$fqn.' not found. This field is most likely not part of version '.$hl7Version;
             }
         }
-        
+
         return 'HL7 version '.$hl7Version.' not supported';
     }
 }

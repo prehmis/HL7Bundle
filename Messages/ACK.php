@@ -29,6 +29,6 @@ class ACK extends AcknowledgeMessage
      */
     public function __construct(Message $req = null, MSH $msh = null, array $options = [])
     {
-        parent::__construct(T0076::ACK, T0354::ACK, $req, $msh, $options);
+        parent::__construct(T0076::ACK, null, T0354::ACK, $req, $msh, $options);
     }
 }

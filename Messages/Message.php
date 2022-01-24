@@ -10,6 +10,7 @@ use Prehmis\HL7Bundle\Segments\Segment;
 use Prehmis\HL7Bundle\Segments\MSH;
 use Prehmis\HL7Bundle\Segments\ValidatedSegmentInterface;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
+use Prehmis\HL7Bundle\Tables\v28\T0103;
 
 /**
  * Class specifying the HL7 message, both request and response.
@@ -32,7 +33,7 @@ class Message
      * Array holding all segments of this message.
      */
     protected $segments;
-    
+
     /**
      * local value for segment separator
      */
@@ -52,6 +53,7 @@ class Message
     protected $keepEmptySubFields;
     protected $validateFields;
     protected $doNotSplitRepetition;
+    protected $processingId;
 
     /**
      * Constructor for Message. Consider using the HL7 factory to obtain a message instead.
@@ -91,6 +93,7 @@ class Message
         $this->escapeChar = $options[HL7Service::ESCAPE_CHARACTER] ?? '\\';
         $this->hl7Version = $options[HL7Service::HL7_VERSION] ?? T0104::RELEASE_2_5;
         $this->validateFields = $options[HL7Service::VALIDATE_FIELDS] ?? true;
+        $this->processingId = $options[HL7Service::PROCESSING_ID] ?? T0103::DEBUGGING;
 
         $this->keepEmptySubFields = $options[HL7Service::KEEP_EMPTY_SUB_FIELDS] ?? false;
         $this->autoIncrementIndices = $options[HL7Service::AUTO_INCREMENT_INDICES] ?? true;
@@ -136,7 +139,8 @@ class Message
             HL7Service::REPETITION_SEPARATOR => $this->repetitionSeparator,
             HL7Service::ESCAPE_CHARACTER => $this->escapeChar,
             HL7Service::SUBCOMPONENT_SEPARATOR => $this->subcomponentSeparator,
-            HL7Service::VALIDATE_FIELDS => $this->validateFields];
+            HL7Service::VALIDATE_FIELDS => $this->validateFields,
+            HL7Service::PROCESSING_ID => $this->processingId];
 
         // Do all segments
         foreach ($segments as $i => $iValue) {
@@ -171,7 +175,7 @@ class Message
             $this->addSegment($segment);
         }
     }
-    
+
     /**
      * Append a segment to the end of the message
      *
@@ -189,13 +193,13 @@ class Message
 
         return true;
     }
-    
+
     public function addSegments(array $arrayOfSegments): bool
     {
         foreach($arrayOfSegments as $segment) {
             $this->addSegment($segment);
         }
-        
+
         return true;
     }
 
@@ -255,7 +259,7 @@ class Message
                 return $ii;
             }
         }
-        
+
         return null;
     }
 
@@ -287,32 +291,37 @@ class Message
 
         return $segmentsByName;
     }
-    
+
     public function getGroupedSegments(string $name): array
     {
         $groupedSegments = [];
         $segmentsByName = [];
-        
+
         $new = false;
         $include = false;
         foreach ($this->segments as $seg) {
-            
+
             if($seg->getName() === $name) {
                 $new = true;
                 $include = true;
             } else {
                 $new = false;
             }
-            
+
             // push the previous array as we start a new group
             if($new && count($segmentsByName)) {
                 $groupedSegments[] = $segmentsByName;
                 $segmentsByName = [];
             }
-            
+
             if($include) {
                 $segmentsByName[] = $seg;
             }
+        }
+
+        // cleanup of last group
+        if(false == $new && count($segmentsByName)) {
+            $groupedSegments[] = $segmentsByName;
         }
 
         return $groupedSegments;
@@ -399,6 +408,7 @@ class Message
             }
 
             $this->hl7Version = $msh->getField(MSH::VERSION_ID);
+            $this->prosessingId = $msh->getField(MSH::PROCESSING_ID);
         }
 
         return true;
@@ -413,7 +423,7 @@ class Message
     {
         return $this->segments;
     }
-    
+
     public function __toString(): string
     {
         return $this->toString(false);
@@ -491,7 +501,7 @@ class Message
     {
         $reflector = new \ReflectionClass($this);
         $segments = glob(dirname($reflector->getFileName()).'/../Segments/*.php');
-        
+
         // Go through each available segment class and reset its ID
         foreach ($segments as $file) { // ['OBR', 'PID', 'OBX', 'IN1'...]
             $className = "Prehmis\\HL7Bundle\\Segments\\".pathinfo($file, PATHINFO_FILENAME);
@@ -552,7 +562,7 @@ class Message
         $msh = $this->getMsh();
         return $msh ? $msh->getTriggerEvent() : '';
     }
-    
+
     public function getMessageStructure()
     {
         $msh = $this->getMsh();

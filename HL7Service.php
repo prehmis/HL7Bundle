@@ -8,6 +8,7 @@ use Prehmis\HL7Bundle\Messages\AcknowledgeMessage;
 use Prehmis\HL7Bundle\Segments\Segment;
 use Prehmis\HL7Bundle\Segments\MSH;
 use Prehmis\HL7Bundle\Tables\v28\T0104;
+use Prehmis\HL7Bundle\Tables\v28\T0103;
 
 /**
  * The HL7 class is a factory class for HL7 messages and segments.
@@ -36,6 +37,8 @@ class HL7Service
     const RESET_INDICES = 'RESET_INDICES';
     const VALIDATE_FIELDS = 'VALIDATE_FIELDS';
     const CUSTOM_VALIDATION_CLASSES = 'CUSTOM_VALIDATION_CLASSES';
+    const PROCESSING_ID = 'PROCESSING_ID';
+    const SENDING_APPLICATION = 'SENDING_APPLICATION';
 
     /**
      * Holds all global HL7 settings.
@@ -66,13 +69,15 @@ class HL7Service
         $this->options[self::REPETITION_SEPARATOR] = '~';
         $this->options[self::ESCAPE_CHARACTER] = '\\';
         $this->options[self::SUBCOMPONENT_SEPARATOR] = '&';
+        $this->options[self::PROCESSING_ID] = T0103::DEBUGGING;
+        $this->options[self::SENDING_APPLICATION] = '';
 
         // Validation
         $this->options[self::HL7_VERSION] = T0104::RELEASE_2_5;
         $this->options[self::VALIDATE_FIELDS] = true;
         $this->options[self::CUSTOM_VALIDATION_CLASSES] = [];
 
-        // 
+        //
         $this->options[self::AUTO_INCREMENT_INDICES] = true;
         $this->options[self::KEEP_EMPTY_SUB_FIELDS] = false;
         $this->options[self::DO_NOT_SPLIT_REPETITION] = false;
@@ -81,7 +86,7 @@ class HL7Service
 
     /**
      * Return global defaults
-     * 
+     *
      * @return array
      */
     public function getOptions(): array
@@ -119,21 +124,21 @@ class HL7Service
 
         return new Message($msgStr, $options);
     }
-    
+
     public function createSegment(string $segmentName, array $fields = null, $validate = null): Segment
     {
         $options = $this->options;
         if (isset($validate)) {
             $options[self::VALIDATE_FIELDS] = $validate ? true : false;
         }
-        
+
         $className = "Prehmis\\HL7Bundle\\Segments\\$segmentName";
         if (class_exists($className)) {
             return new $className($fields, $options);
-        } 
-        
+        }
+
         return new Segment($segmentName, $fields);
-        
+
     }
 
     /**
@@ -156,12 +161,13 @@ class HL7Service
 
         return new ACK($incoming, $msh, $this->options);
     }
-    
+
     /**
      * Convenience module implementing any acknowledgement message. This can be used in HL7 servers to create an
      * acknowledgement for an incoming message.
      *
      * @param string $type Table 76
+     * @param string|null $triggerEvent Table 3
      * @param string $structure Table 354
      * @param Message|null $incoming
      * @param MSH|null $msh
@@ -170,14 +176,14 @@ class HL7Service
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
-    public function createAcknowledgeMessage(string $type, string $structure, Message $incoming = null, MSH $msh = null, bool $validate = null): AcknowledgeMessage
+    public function createAcknowledgeMessage(string $type, ?string $triggerEvent, string $structure, Message $incoming = null, MSH $msh = null, bool $validate = null): AcknowledgeMessage
     {
         $options = $this->options;
         if (isset($validate)) {
             $options[self::VALIDATE_FIELDS] = $validate ? true : false;
         }
-        
-        return new AcknowledgeMessage($type, $structure, $incoming, $msh, $this->options);
+
+        return new AcknowledgeMessage($type, $triggerEvent, $structure, $incoming, $msh, $this->options);
     }
 
     /**
@@ -194,7 +200,8 @@ class HL7Service
             self::FIELD_SEPARATOR,
             self::REPETITION_SEPARATOR,
             self::SUBCOMPONENT_SEPARATOR,
-            self::COMPONENT_SEPARATOR];
+            self::COMPONENT_SEPARATOR,
+            self::PROCESSING_ID];
         if (in_array($name, $characterOptions)) {
             if (is_string($value) && strlen($value) == 1) {
                 $this->options[$name] = $value;
@@ -217,12 +224,13 @@ class HL7Service
 
         $stringOptions = [self::NULL_VALUE,
             self::HL7_VERSION,
-            self::SEGMENT_SEPARATOR];
+            self::SEGMENT_SEPARATOR,
+            self::SENDING_APPLICATION];
         if (in_array($name, $stringOptions)) {
             $this->options[$name] = (string) $value;
             return true;
         }
-        
+
         $arrayOptions = [self::CUSTOM_VALIDATION_CLASSES];
         if (in_array($name, $arrayOptions) && is_array($value)) {
             $this->options[$name] = $value;
