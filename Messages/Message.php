@@ -274,18 +274,23 @@ class Message
     }
 
     /**
-     * Return an array of all segments with the given name
+     * Return an array of all segments with the given name.
+     * If endName is provided, it will not go past the first segment with the endName
      *
      * @param string $name Segment name
+     * @param string $endName Segment name to break at
      * @return array List of segments identified by name
      */
-    public function getSegmentsByName(string $name): array
+    public function getSegmentsByName(string $name, string $endName = null): array
     {
         $segmentsByName = [];
 
         foreach ($this->segments as $seg) {
             if ($seg->getName() === $name) {
                 $segmentsByName[] = $seg;
+            }
+            if ($seg->getName() === $endName) {
+                return $segmentsByName;
             }
         }
 
